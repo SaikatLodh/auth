@@ -24,8 +24,10 @@ export class AuthService {
     private jwtService: JwtService,
     private MailService: MailService,
     private configService: ConfigService,
-  ) {}
-  async sendOtp(sendOtpDto: sendOtpDto) {}
+  ) { }
+  async sendOtp(sendOtpDto: sendOtpDto) {
+
+  }
 
   async verifyOtp(verifyOtpDto: verifyOtpDto) {
     // Implement the logic to send OTP here

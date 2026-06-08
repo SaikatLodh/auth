@@ -4,7 +4,7 @@ import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { MongooseModule } from '@nestjs/mongoose';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 
 @Module({
@@ -13,16 +13,26 @@ import { JwtModule } from '@nestjs/jwt';
       isGlobal: true,
       envFilePath: '.env',
     }),
-    JwtModule.register({
+    JwtModule.registerAsync({
       global: true,
-      secret: process.env.ACCESS_TOKEN_SECRET!,
-      signOptions: { expiresIn: process.env.ACCESS_TOKEN_EXPIRES_IN! as any },
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => ({
+        secret: configService.get<string>('ACCESS_TOKEN_SECRET'),
+        signOptions: { expiresIn: configService.get<string>('ACCESS_TOKEN_EXPIRES_IN') as any },
+      }),
+      inject: [ConfigService],
     }),
-    MongooseModule.forRoot(process.env.MONGODB_URL!),
+    MongooseModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => ({
+        uri: configService.get<string>('MONGODB_URL') || 'mongodb://localhost:27017/auth',
+      }),
+      inject: [ConfigService],
+    }),
     AuthModule,
     UserModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }
