@@ -489,7 +489,7 @@ export class AuthService {
     }
   }
 
-  async forgotResetPassword(token: string, forgotResetPasswordDto: forgotResetPasswordDto) {
+  async forgotResetPassword(forgotResetPasswordDto: forgotResetPasswordDto) {
     if (
       forgotResetPasswordDto.password !== forgotResetPasswordDto.confirmPassword
     ) {
@@ -501,7 +501,7 @@ export class AuthService {
 
     const resetPasswordToken = crypto
       .createHash('sha256')
-      .update(token)
+      .update(forgotResetPasswordDto.token)
       .digest('hex');
 
     const checkValidation = await this.userModel.findOne({

@@ -2,8 +2,9 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User, userDocument } from 'src/entites/user.entites';
-import { updatePasswordDto } from './dto/user.dto';
+import { updatePasswordDto, updateUserDto } from './dto/user.dto';
 import * as bcrypt from 'bcryptjs';
+import { FileUploadService } from 'src/helpers/file-upload.service';
 
 @Injectable()
 export class UserService {
@@ -27,7 +28,7 @@ export class UserService {
         }
     }
 
-    async updateProfile(userId: string, updateProfileDto: any) {
+    async updateProfile(userId: string, updateProfileDto: updateUserDto) {
         try {
             const user = await this.userModel.findById(userId);
             if (!user) {
@@ -42,8 +43,8 @@ export class UserService {
                 const updatedUser = await this.userModel.findByIdAndUpdate(
                     userId,
                     {
-                        fullName: data.fullName,
-                        profilePicture: data.profileImage,
+                        fullName: updateProfileDto.fullName,
+                        profilePicture: updateProfileDto.profileImage,
                     },
                     {
                         new: true,
@@ -61,8 +62,8 @@ export class UserService {
                 const updatedUser = await this.userModel.findByIdAndUpdate(
                     userId,
                     {
-                        fullName: data.fullName,
-                        profilePicture: data.profileImage,
+                        fullName: updateProfileDto.fullName,
+                        profilePicture: updateProfileDto.profileImage,
                     },
                     {
                         new: true,
@@ -88,7 +89,6 @@ export class UserService {
             throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
 
     async updatePassword(userId: string, data: updatePasswordDto) {
         if (data.newPassword !== data.confirmPassword) {
@@ -121,7 +121,6 @@ export class UserService {
         return { status: 200, data: {}, message: 'Password updated successfully' };
     }
 
-
     async deleteAccount(userId: string) {
         const user = await this.userModel.findByIdAndDelete(userId);
         if (!user) {
@@ -131,5 +130,16 @@ export class UserService {
         user.isDeleted = true;
         await user.save({ validateBeforeSave: false });
         return { status: 200, data: {}, message: 'Account deleted successfully' };
+    }
+
+    async uploadToCloudinary(file: Express.Multer.File) {
+        try {
+            return await this.fileUploadService.uploadToCloudinary(file);
+        } catch {
+            throw new HttpException(
+                'Upload failed',
+                HttpStatus.INTERNAL_SERVER_ERROR,
+            );
+        }
     }
 }

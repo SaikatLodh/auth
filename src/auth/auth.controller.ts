@@ -4,7 +4,6 @@ import {
   Body,
   Res,
   Get,
-  Param,
   UseGuards,
 } from '@nestjs/common';
 import type { Response } from 'express';
@@ -25,25 +24,25 @@ export class AuthController {
   @Post('send-otp')
   async sendOtp(@Body() data: sendOtpDto, @Res() res: Response) {
     const result = await this.authService.sendOtp(data);
-    return res.status(200).json(result);
+    return res.json(result);
   }
 
   @Post('verify-otp')
   async verifyOtp(@Body() data: verifyOtpDto, @Res() res: Response) {
     const result = await this.authService.verifyOtp(data);
-    return res.status(200).json(result);
+    return res.json(result);
   }
 
   @Post('register')
   async register(@Body() data: registerDto, @Res() res: Response) {
     const result = await this.authService.register(data);
-    return res.status(200).json(result);
+    return res.json(result);
   }
 
   @Post('login')
   async logIn(@Body() data: loginDto, @Res() res: Response) {
     const result = await this.authService.login(data);
-    return res.status(200).json(result);
+    return res.json(result);
   }
 
   @Post('forgot-password/send-email')
@@ -52,7 +51,7 @@ export class AuthController {
     @Res() res: Response,
   ) {
     const result = await this.authService.forgotSendEmail(data);
-    return res.status(200).json(result);
+    return res.json(result);
   }
 
   @Post('forgot-password/reset-password')
@@ -61,7 +60,7 @@ export class AuthController {
     @Res() res: Response,
   ) {
     const result = await this.authService.forgotResetPassword(data);
-    return res.status(200).json(result);
+    return res.json(result);
   }
 
   @Get('refresh-token')
@@ -71,6 +70,6 @@ export class AuthController {
     @Res() res: Response,
   ) {
     const result = await this.authService.refreshtoken(refresToken);
-    return res.status(200).json(result);
+    return res.json(result);
   }
 }

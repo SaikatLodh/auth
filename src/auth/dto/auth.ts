@@ -42,6 +42,9 @@ export class forgotSendEmailDto {
 
 export class forgotResetPasswordDto {
   @IsString()
+  token!: string;
+
+  @IsString()
   @MinLength(6)
   password!: string;
 
