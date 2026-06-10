@@ -65,3 +65,8 @@ export class UserController {
 // CLOUDINARY_CLOUD_NAME = dvkyxnqpc
 // CLOUDINARY_API_KEY = 457867193262138
 // CLOUDINARY_API_SECRET = mzOfIZ5EWbbLovI4xl15Szf6vh4
+// SMPT_HOST =smtp.gmail.com
+// SMPT_PORT =465
+// SMPT_SERVICE =gmail
+// SMPT_MAIL =saikatlidhroni20019@gmail.com
+// SMPT_PASSWORD = waep nbgx kcsx tpjo
